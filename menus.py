@@ -93,10 +93,8 @@ def batch_adjust_menu():
                 if type(saved_objects[item])==type(Batch()):
                         print('\t\t{0}'.format(item))
         batch_choice=input('\nBatch to edit?\n')
-        print(batch_choice)
-        batch=saved_objects[str(batch_choice)]
-        print(type(batch))
-        while True:
+        while saved_objects[batch_choice]:
+                batch=saved_objects[batch_choice]
                 batch.print_batch()
                 choice=input('Type -e- to edit load, type -d- to delete existing.\n')
                 if choice=='e':
@@ -117,9 +115,12 @@ def batch_adjust_menu():
                 if choice=='d':
                         batch=input('Which load to delete?')
                         saved_objects.pop(batch)
-                return
+                else:
+                        batch_menu()
+        batch_menu()
 
 def new_batch_menu():
+        print('Batch Menu')
         while True:
                 batch_name=input('Enter Batch Name:')
                 if batch_name in saved_objects:
@@ -152,6 +153,7 @@ def batch_menu():
         Route={'n':new_batch_menu,'a':batch_adjust_menu,'v':view_batch_menu}
         Route.get(menu_input,exitmenu)()
 
+
 def new_bake_menu():
         L=[]
         while True:
@@ -183,8 +185,40 @@ def new_bake_menu():
                 value=saved_objects[item]
                 print('{0}: {1} {2}kg loaves of {3}\n'.format
                 (item,value.loaves,value.loafsize,value.formula.name))
+
+def adjust_bake_menu():
+        bake=input('Which bake to modify?\n')
+        while saved_objects[bake]:
+                for item in saved_objects[bake].Batches:
+                        value=saved_objects[item]
+                        print('{0}: {1} {2}kg loaves of {3}\n'.format
+                        (item,value.loaves,value.loafsize,value.formula.name))
+                batch_adjust_menu()
+
+def delete_bake_menu():
+        bake=input('Which bake to delete?\n')
+        while saved_objects[bake]:
+                sure=input('Delete this bake? y/n\n')
+                if sure=='y':
+                     saved_objects.pop(bake)
+                return
+
+def bake_data_menu():
+        bake=input('Which bake to analyze?')
+        while saved_objects[bake]:
+                ...
+             
                 
-                
+def bake_menu():
+        print('\nEXISTING BAKES ARE:\n')
+        for item in saved_objects:
+                if type(saved_objects[item])==type(Bake()):
+                        print('\t',item)
+        menu_input=input('Plan a -n-ew bake?\n-a-djust and existing?\n'
+                         'Access bake -d-ata?\n-d-elete a bake?')
+        Route={'n':new_bake_menu,'a':adjust_bake_menu}
+        Route.get(menu_input,exitmenu)()
+        
 
                         
         
