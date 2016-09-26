@@ -1,0 +1,48 @@
+Bake Data
+--------------------DATA WE WANT--------------------
+    For a bake we want to know:
+    i) the amount of total ingredient req'd (incl for leaven builds)
+    ii)# loaves produced
+    iii)leaven schedule
+
+    of these the leaven schedule is the only one which
+    is not immediately obvious, we must define the leaven
+    ratios as a formula. Moreover the initial revival is
+    a distinct ration. Also must allow for storing leaven
+
+    Need three formulas for the leaven builds:
+            i) leaven refresh {'Whole Wheat':100,'Water':65,'Leaven':15}
+           ii) leaven store {'Whole Wheat':100,'Leaven':38}
+          iii) leaven revive {'Stored Leaven':100,'Water':73}
+           iv) leaven build {'Whole Wheat':100,'Water':70,'Leaven':10}
+
+    There are then 4 stages of the leaven build:
+            i) leaven revive  d-48 using leaven revive formula
+           ii) leaven refresh d-36 using leaven refresh formula
+          iii) leaven refresh d-24 using leaven refresh formula
+           iv) leaven build   d-12 using leaven build formula
+
+    An additional step would be the leaven store:
+            i) leaven store   d-d  using leaven store formula
+
+    Calculation begins with a summing of total leaven required for
+    the bake. This will be done with out amount_req'd(ingredient) formula.
+    to this must be added a safety margin and also enough to store ~75.
+    So:
+         leaven req'd= 1.07*(amount_req'd(Leaven)+0.075kg)
+
+    then working backwards this will give us the required amount for our
+    leaven build. Simple couple line calculation will give us our build.
+    Then simply calculate and return the amounts for the above 4 stages.
+
+    What about flour required for bake?
+
+         The amount of flour required to produce leaven for the bake should
+         necessarily be included in this calculation. A rough approximation
+         of the leaven formula will give a servicable estimate. That is to
+         say that
+                  amount_req'd(Flour)= sum(Flour in each batch)
+                                        + 0.55sum(Leaven in each batch)
+
+    Nothing left but to code it!
+    
