@@ -45,4 +45,9 @@ Bake Data
                                         + 0.55sum(Leaven in each batch)
 
     Nothing left but to code it!
+
+    Redesign user input, with new bake use it to create loads(batches) for
+    the bake. That will create a more intuitive interaction and less fussy
+    interface. This will allow us to practically eliminate cumbersome batch menu.
+    
     

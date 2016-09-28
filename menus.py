@@ -153,8 +153,40 @@ def batch_menu():
         Route={'n':new_batch_menu,'a':batch_adjust_menu,'v':view_batch_menu}
         Route.get(menu_input,exitmenu)()
 
-
 def new_bake_menu():
+    L=[]
+    while True:#loops to ensure a valid name entered.
+        print('\nFormulas are:')
+        for item in saved_objects:
+                if type(saved_objects[item])==type(Formula()):
+                        print('\t',item)
+        bake_name=input('Enter Bake Name:\n')
+        if bake_name in saved_objects:
+            print('Name already exists, use a unique name.')
+        else:
+            break #entered a valid name, now can build bake.
+    while True:
+        more=input('Enter Load Name\n')
+        if more=='':
+            break
+        else:
+            formula=input('Formula:')
+            formula=saved_objects[formula]
+            loaves=input('Number of Loaves:')
+            size=input('Loaf Weight(Kg):')
+            load=saved_objects[more]=Batch(more,formula,loaves,size)
+            L.append(more)
+            print('You have added the following load:\n{0}: {1} {2}kg loaves of {3}\n'.format
+                              (more,load.loaves,load.loafsize,load.formula.name))
+    saved_objects[bake_name]=Bake(bake_name,L)
+    print('Your bake is:\n')
+    for item in L:
+        value=saved_objects[item]            
+        print('{0}: {1} {2}kg loaves of {3}\n'.format
+                (item,value.loaves,value.loafsize,value.formula.name))
+
+
+"""def new_bake_menu():
         L=[]
         while True:
                 bake_name=input('Enter Bake Name:')
@@ -184,7 +216,7 @@ def new_bake_menu():
         for item in L:
                 value=saved_objects[item]
                 print('{0}: {1} {2}kg loaves of {3}\n'.format
-                (item,value.loaves,value.loafsize,value.formula.name))
+                (item,value.loaves,value.loafsize,value.formula.name))"""
 
 def adjust_bake_menu():
         bake=input('Which bake to modify?\n')
@@ -214,6 +246,7 @@ def bake_menu():
         for item in saved_objects:
                 if type(saved_objects[item])==type(Bake()):
                         print('\t',item)
+        print('\n\n')
         menu_input=input('Plan a -n-ew bake?\n-a-djust and existing?\n'
                          'Access bake -d-ata?\n-d-elete a bake?')
         Route={'n':new_bake_menu,'a':adjust_bake_menu}
