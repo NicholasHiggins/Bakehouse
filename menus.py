@@ -16,6 +16,8 @@ def save():
 def exitmenu():
         return
 
+menuhead='--'*30
+
 def new_formula_menu():
         formula_name=input('Enter Formula Name:')
         ingredient=''
@@ -77,11 +79,7 @@ def formula_menu():
         if menu_input=='a':
                 formula_adjust_menu()
                 formula_menu()
-"""Running into difficulty with printing the batch, because of definition of
-        objectsvthrough saved_objects dictionary and in Classes printbatch
-        references formula directly. Solutions would be to move saved_objects
-        Classes module, or move print_batch elements into menu.
-        """
+
 def view_batch_menu():
         batch_choice=input('Which batch to print?')
         batch=saved_objects[batch_choice]
@@ -154,35 +152,41 @@ def batch_menu():
         Route.get(menu_input,exitmenu)()
 
 def new_bake_menu():
-    L=[]
-    while True:#loops to ensure a valid name entered.
+        L=[]
         print('\nFormulas are:')
         for item in saved_objects:
                 if type(saved_objects[item])==type(Formula()):
                         print('\t',item)
-        bake_name=input('Enter Bake Name:\n')
-        if bake_name in saved_objects:
-            print('Name already exists, use a unique name.')
-        else:
-            break #entered a valid name, now can build bake.
-    while True:
-        more=input('Enter Load Name\n')
-        if more=='':
-            break
-        else:
-            formula=input('Formula:')
-            formula=saved_objects[formula]
-            loaves=input('Number of Loaves:')
-            size=input('Loaf Weight(Kg):')
-            load=saved_objects[more]=Batch(more,formula,loaves,size)
-            L.append(more)
-            print('You have added the following load:\n{0}: {1} {2}kg loaves of {3}\n'.format
+        while True:
+                bake_name=input('Enter Bake Name:\n')
+                if bake_name:
+                        if bake_name in saved_objects:
+                            print('Name already exists, use a unique name.\n')
+                            continue
+                        else:
+                            break #entered a valid name, now can build bake.
+        else: return
+        while True:
+                more=input('Enter Load Name\n')
+                if more=='':
+                    break
+                if more in saved_objects:
+                        print('Name already exists, use a unique name.')
+                else:
+                    formula=input('Formula:')
+                    formula=saved_objects[formula]
+                    loaves=input('Number of Loaves:')
+                    size=input('Loaf Weight(Kg):')
+                    load=saved_objects[more]=Batch(more,formula,loaves,size)
+                    L.append(more)
+                    print('You have added the following load:\n{0}: {1} {2}kg loaves of {3}\n'.format
                               (more,load.loaves,load.loafsize,load.formula.name))
-    saved_objects[bake_name]=Bake(bake_name,L)
-    print('Your bake is:\n')
-    for item in L:
-        value=saved_objects[item]            
-        print('{0}: {1} {2}kg loaves of {3}\n'.format
+        saved_objects[bake_name]=Bake(bake_name,L)
+        save()
+        print('Your bake is:\n')
+        for item in L:
+                value=saved_objects[item]            
+                print('{0}: {1} {2}kg loaves of {3}\n'.format
                 (item,value.loaves,value.loafsize,value.formula.name))
 
 
@@ -233,13 +237,39 @@ def delete_bake_menu():
                 sure=input('Delete this bake? y/n\n')
                 if sure=='y':
                      saved_objects.pop(bake)
+                save()
                 return
 
 def bake_data_menu():
-        bake=input('Which bake to analyze?')
-        while saved_objects[bake]:
-                ...
-             
+    print(menuhead)
+    K={'t':'for total ingredients.','l':'for the leaven schedule'}
+    bake=input('\nWhich bake to analyze?\n')
+    for item in K:
+        print('Enter {0:<1}{1:>10}'.format(item,K[item]))
+    input('\n')
+
+#leaven refresh
+#leaven store
+#leaven revive
+#leaven build
+
+
+def amount_needed(bake,ingredient):
+    T=[(saved_objects[load]).recipe()[ingredient]
+       for load in saved_objects[bake].loads]
+    req=sum(T)
+    print('{0} bake requires {1}kg of {2}'.format(bake,req,ingredient))
+    
+def view_bake_menu():
+        print('\n\n\n')
+        bake=input('Which bake to view?\n')
+        print('\n{0} consists of {1} loads as follows:\n'.format(bake,len(saved_objects[bake].Batches)))
+        for item in saved_objects[bake].Batches:
+                value=saved_objects[item]
+                print('{0}: {1} {2}kg loaves of {3}\n'.format
+                (item,value.loaves,value.loafsize,value.formula.name))
+                value.print_batch()
+        
                 
 def bake_menu():
         print('\nEXISTING BAKES ARE:\n')
@@ -249,20 +279,20 @@ def bake_menu():
         print('\n\n')
         menu_input=input('Plan a -n-ew bake?\n-a-djust and existing?\n'
                          'Access bake -d-ata?\n-d-elete a bake?')
-        Route={'n':new_bake_menu,'a':adjust_bake_menu}
+        Route={'n':new_bake_menu,'a':adjust_bake_menu,'v':view_bake_menu}
         Route.get(menu_input,exitmenu)()
         
 
                         
         
 def main_menu():       
-        print('\t\t\t\tWelcome to Bakehouse')
-
         menu_input=input('\n\n\nWHAT ARE WE DOING?\n\t\tType -f- for formulas\n\t\t'
                          '-b- for batch\n\t\t-a- for bake\n\t\t and -exit- to quit\n')
         Route={'f':formula_menu,'b':batch_menu,'a':bake_menu,'exit':quit}
         Route.get(menu_input,'not an option')()
         main_menu()
         
-if __name__=='__main__':
+"""if __name__=='__main__':
+        print('\t\t\t\tWelcome to Bakehouse')
         main_menu()
+"""

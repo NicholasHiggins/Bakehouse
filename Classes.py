@@ -55,7 +55,8 @@ class Batch:
                             for ingredient in self.formula.ingredients)
         Total_Weight=int(self.loaves)*float(self.loafsize)
         Factor=Total_Weight/Total_Percent
-        return {ingredient:round(Factor*self.formula.formula[ingredient],3) for ingredient in self.formula.ingredients}
+        return {ingredient:round(Factor*self.formula.formula[ingredient],3)
+                for ingredient in self.formula.ingredients}
 
     def print_batch(self):
         K=self.recipe()
@@ -69,13 +70,13 @@ class Bake:
     """Specifies a planned Bake or group of batches, ie,
     Friday Bake: 2Wholewheat Batches,1 White Batch,1 Multigrain"""
 
-    def __init__(self,name=None,Batches=[]):
-        self.Batches=Batches
+    def __init__(self,name=None,Loads=[]):
+        self.loads=Loads
 
-    def amount_needed(self,ingredient):
-        
-        T=[Batch.recipe()[ingredient]for Batch in self.Batches]
-        return sum(T)
+    #def amount_needed(self,ingredient):
+     #   
+      #  T=[(saved_objects[Batch]).recipe()[ingredient]for Batch in self.Batches]
+       # return sum(T)
 
 """ ::::::::::: TO DO   ::::::::::
     -need to improve the layout of the printed formulas,batches etc. Perhaps
