@@ -10,7 +10,7 @@ Bake Data
     ratios as a formula. Moreover the initial revival is
     a distinct ration. Also must allow for storing leaven
 
-    Need three formulas for the leaven builds:
+    Need four formulas for the leaven builds:
             i) leaven refresh {'Whole Wheat':100,'Water':65,'Leaven':15}
            ii) leaven store {'Whole Wheat':100,'Leaven':38}
           iii) leaven revive {'Stored Leaven':100,'Water':73}
