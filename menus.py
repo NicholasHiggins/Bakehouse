@@ -16,7 +16,7 @@ def save():
 def exitmenu():
         return
 
-menuhead='--'*30
+menuhead='--'*30+'/n'
 
 def new_formula_menu():
         formula_name=input('Enter Formula Name:')
@@ -69,6 +69,7 @@ def formula_adjust_menu():
                 
 def formula_menu():
         print('/nCURRENT FORMULAS ARE:\n')
+        #doesn't display in alpabetic format. would be nice . . . 
         for item in saved_objects.keys():
                 if type(saved_objects[item])==type(Formula()):
                         print('\t\t{0}'.format(item))
@@ -89,7 +90,7 @@ def view_batch_menu():
 def batch_adjust_menu():
         for item in saved_objects.keys():
                 if type(saved_objects[item])==type(Batch()):
-                        print('\t\t{0}'.format(item))
+                        print('\t\t{0}'.format(int(item)))
         batch_choice=input('\nBatch to edit?\n')
         while saved_objects[batch_choice]:
                 batch=saved_objects[batch_choice]
@@ -245,21 +246,63 @@ def bake_data_menu():
     K={'t':'for total ingredients.','l':'for the leaven schedule'}
     bake=input('\nWhich bake to analyze?\n')
     for item in K:
-        print('Enter {0:<1}{1:>10}'.format(item,K[item]))
-    input('\n')
+        print('Enter {0:<1} {1:>10}'.format(item,K[item]))
+    choice=input('\n')
+    
 
 #leaven refresh
 #leaven store
 #leaven revive
 #leaven build
+def leaven_schedule(bake):
+        req_leaven= 1.07*(amount_needed_data(bake,'Leaven'))
+        d12=Batch('d-12| Leaven Build',saved_objects['Leaven Build'],1,req_leaven)
+        req_leaven= 1.07*(d12.req_ingredient('Leaven'))
+        if req_leaven<0.370:
+                req_leaven=0.370
+        d24=Batch('d-24| 2nd Refresh',saved_objects['Leaven Refresh'],1,req_leaven)
+        d36=Batch('d-36| 1st Refresh',saved_objects['Leaven Refresh'],1,0.370)
+        d48=Batch('d-48| Revival',saved_objects['Leaven Revive'],1,0.475)
+        print(menuhead)
+        print('\t\t\tThe Leaven schedule for',bake,'is:\n\n')
+        d48.print_batch()
+        d36.print_batch()
+        d24.print_batch()
+        d12.print_batch()
+        print('\n\t\tBake Day| Leaven Store:\n')
+        print('\t\t{0:<20} {1:>12.3f}'.format('Leaven',0.075))
+        print('\t\t{0:<20} {1:>12.3f}'.format('Whole Wheat',0.200))
+        
+def amount_needed_data(bake,ingredient):
+    T=[(saved_objects[load]).recipe()[ingredient]
+       for load in saved_objects[bake].loads]
+    req=sum(T)
+    return req     
 
 
 def amount_needed(bake,ingredient):
     T=[(saved_objects[load]).recipe()[ingredient]
        for load in saved_objects[bake].loads]
     req=sum(T)
-    print('{0} bake requires {1}kg of {2}'.format(bake,req,ingredient))
-    
+    print('{0} bake requires {1:05.3f}kg of {2}'.format(bake,req,ingredient))
+
+def bake_ingredients_menu():
+        print(menuhead)
+        bake=saved_objects[input('What bake to query?/n')]
+        T={}
+        for load in bake.loads:
+                load=saved_objects[load]
+                for item in load.recipe():
+                        if item in T:
+                                T[item]+=load.recipe()[item]
+                        else:
+                                T[item]=load.recipe()[item]
+        L=[(x,T[x]) for x in T]
+        L.sort(key=lambda x:x[0])
+        print('Bake requires:\n')
+        for item in L:
+                print('{0:05.3f} kg of {1}.'.format(item[1],item[0]))    
+
 def view_bake_menu():
         print('\n\n\n')
         bake=input('Which bake to view?\n')

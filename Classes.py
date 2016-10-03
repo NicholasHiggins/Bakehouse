@@ -63,8 +63,8 @@ class Batch:
         R=Formula(self.name,K)
         R.print_formula()
 
-    def req_leaven(self):
-        return int(self.recipe()[Leaven])
+    def req_ingredient(self,ingredient):
+        return float(self.recipe()[ingredient])
 
 class Bake:
     """Specifies a planned Bake or group of batches, ie,
@@ -72,6 +72,7 @@ class Bake:
 
     def __init__(self,name=None,Loads=[]):
         self.loads=Loads
+        self.leaven_schedule=[]
 
     #def amount_needed(self,ingredient):
      #   
