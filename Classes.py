@@ -1,5 +1,9 @@
-"""For this code, if a variable is an Object then it is capilalized,
-    eg. Flour is an Ingredient, White is a Batch."""
+import pickle
+"""saved_objects is now a dictionary that goes from a string key to one of our defined
+        objects, be it a batch,formula or bake"""
+
+def menuhead():
+    print('--'*30+'\n')
 
     
         
@@ -24,21 +28,6 @@ class Formula:
     all up at start of program. Solution? Create file seperately that contains
     a list, then at start of program open file, load formula's then, then save
     subsequent formulas to that file."""
-#saved_formulas_file=open('formulas.pkl','rb')
-
-
-#try:
- #   saved_formulas=pickle.load(saved_formulas_file)
-#except EOFError:
- #  saved_formulas=[]
- 
-#for item in saved_formulas:
- #   vars()[item[0]]=item[1] 
-
-#def save_formula(self):
- #   saved_formulas.append([self.name,self])
-  #  pickle.dump(saved_formulas,open('formulas.pkl','wb',-1))
-
 
 class Batch:
     """Specifies a planned Batch of a recipe,
@@ -79,6 +68,21 @@ class Bake:
       #  T=[(saved_objects[Batch]).recipe()[ingredient]for Batch in self.Batches]
        # return sum(T)
 
+
+try:
+        saved_objects=pickle.load(open('objects.pkl','rb'))
+except FileNotFoundError:
+        saved_objects={'test':'test'}
+        pickle.dump(saved_objects,open('objects.pkl','wb',-1))
+
+def save():
+        pickle.dump(saved_objects,open('objects.pkl','wb',-1))
+        pickle.load(open('objects.pkl','rb'))
+
+def delete(item):
+        saved_objects.pop(item.name)
+        pickle.dump(saved_objects,open('objects.pkl','wb',-1))
+        pickle.load(open('objects.pkl','rb'))
 """ ::::::::::: TO DO   ::::::::::
     -need to improve the layout of the printed formulas,batches etc. Perhaps
     should print to pdf. Then easy to print hard-copy or view on screen.
