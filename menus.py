@@ -248,8 +248,18 @@ def bake_data_menu():
     for item in K:
         print('Enter {0:<1} {1:>10}'.format(item,K[item]))
     choice=input('\n')
-    
-
+    S={}
+    bakeobject=saved_objects[bake]
+    if choice=='t':
+        for load in bakeobject.loads:
+                load=saved_objects[load]
+                for ingredient in load.formula.ingredients:
+                        S[ingredient]=ingredient
+    print('The bake',bake,'requires the following amounts:')
+    for ingredient in sorted(S.keys(),reverse=True):
+        amount_needed(bake,ingredient)
+              
+        
 #leaven refresh
 #leaven store
 #leaven revive
@@ -284,7 +294,7 @@ def amount_needed(bake,ingredient):
     T=[(saved_objects[load]).recipe()[ingredient]
        for load in saved_objects[bake].loads]
     req=sum(T)
-    print('{0} bake requires {1:05.3f}kg of {2}'.format(bake,req,ingredient))
+    print('{0:>6.3f} {1} {2:<15}'.format(req,'kg of',ingredient))
 
 def bake_ingredients_menu():
         print(menuhead)
@@ -306,8 +316,8 @@ def bake_ingredients_menu():
 def view_bake_menu():
         print('\n\n\n')
         bake=input('Which bake to view?\n')
-        print('\n{0} consists of {1} loads as follows:\n'.format(bake,len(saved_objects[bake].Batches)))
-        for item in saved_objects[bake].Batches:
+        print('\n{0} consists of {1} loads as follows:\n'.format(bake,len(saved_objects[bake].loads)))
+        for item in saved_objects[bake].loads:
                 value=saved_objects[item]
                 print('{0}: {1} {2}kg loaves of {3}\n'.format
                 (item,value.loaves,value.loafsize,value.formula.name))
@@ -322,7 +332,7 @@ def bake_menu():
         print('\n\n')
         menu_input=input('Plan a -n-ew bake?\n-a-djust and existing?\n'
                          'Access bake -d-ata?\n-d-elete a bake?')
-        Route={'n':new_bake_menu,'a':adjust_bake_menu,'v':view_bake_menu}
+        Route={'n':new_bake_menu,'a':adjust_bake_menu,'v':view_bake_menu,'d':bake_data_menu}
         Route.get(menu_input,exitmenu)()
         
 
