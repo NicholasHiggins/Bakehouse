@@ -1,4 +1,5 @@
-from menus import *
+from Classes import *
+
 
 def new_bake_menu():
         menuhead()
@@ -76,7 +77,7 @@ def adjust_bake_menu():
         menuhead()
         bake=input('Which bake to modify?\n')
         while saved_objects[bake]:
-                for item in saved_objects[bake].Batches:
+                for item in saved_objects[bake].loads:
                         value=saved_objects[item]
                         print('{0}: {1} {2}kg loaves of {3}\n'.format
                         (item,value.loaves,value.loafsize,value.formula.name))
@@ -106,9 +107,12 @@ def bake_data_menu():
                 load=saved_objects[load]
                 for ingredient in load.formula.ingredients:
                         S[ingredient]=ingredient
-    print('The bake',bake,'requires the following amounts:')
-    for ingredient in sorted(S.keys(),reverse=True):
-        amount_needed(bake,ingredient)
+        print('The bake',bake,'requires the following amounts:')
+        for ingredient in sorted(S.keys(),reverse=True):
+                amount_needed(bake,ingredient)
+    if choice=='l':
+            leaven_schedule(bake)
+            
               
 def leaven_schedule(bake):
         req_leaven= 1.07*(amount_needed_data(bake,'Leaven'))
@@ -119,7 +123,7 @@ def leaven_schedule(bake):
         d24=Batch('d-24| 2nd Refresh',saved_objects['Leaven Refresh'],1,req_leaven)
         d36=Batch('d-36| 1st Refresh',saved_objects['Leaven Refresh'],1,0.370)
         d48=Batch('d-48| Revival',saved_objects['Leaven Revive'],1,0.475)
-        print(menuhead)
+        menuhead()
         print('\t\t\tThe Leaven schedule for',bake,'is:\n\n')
         d48.print_batch()
         d36.print_batch()
@@ -127,18 +131,28 @@ def leaven_schedule(bake):
         d12.print_batch()
         print('\n\t\tBake Day| Leaven Store:\n')
         print('\t\t{0:<20} {1:>12.3f}'.format('Leaven',0.075))
-        print('\t\t{0:<20} {1:>12.3f}'.format('Whole Wheat',0.200))
+        print('\t\t{0:<20} {1:>12.3f}\n\n\n'.format('Whole Wheat',0.200))
         
 def amount_needed_data(bake,ingredient):
-    T=[(saved_objects[load]).recipe()[ingredient]
-       for load in saved_objects[bake].loads]
+    T=[]
+    for load in saved_objects[bake].loads:
+            try:
+                    T.append(saved_objects[load].recipe()[ingredient])
+            except:
+                    pass                
     req=sum(T)
     return req     
 
 
 def amount_needed(bake,ingredient):
-    T=[(saved_objects[load]).recipe()[ingredient]
-       for load in saved_objects[bake].loads]
+    #T=[(saved_objects[load]).recipe()[ingredient]
+     #  for load in saved_objects[bake].loads]
+    T=[]
+    for load in saved_objects[bake].loads:
+            try:
+                    T.append(saved_objects[load].recipe()[ingredient])
+            except:
+                    pass                
     req=sum(T)
     print('{0:>6.3f} {1} {2:<15}'.format(req,'kg of',ingredient))
 

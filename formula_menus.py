@@ -1,5 +1,4 @@
 from Classes import *
-from menus import *
 
 def new_formula_menu():
         menuhead()
@@ -22,14 +21,14 @@ def new_formula_menu():
 
 
 def formula_adjust_menu():
-        menuhead
-        for item in saved_objects.keys():
+        menuhead()
+        for item in sorted(saved_objects.keys()):
                 if type(saved_objects[item])==type(Formula()):
                         print('\t\t{0}'.format(item))
         formula_choice=saved_objects[input('\nFormula to edit?\n')]
         while True:
                 formula_choice.print_formula()
-                choice=input('Type -e- to edit load, type -d- to delete existing.\n')
+                choice=input('Type -e- to edit formula, type -d- to delete existing.\n')
                 if choice=='e':
                         
                         ingredient=input('Ingredient:')
@@ -53,15 +52,24 @@ def formula_adjust_menu():
                         
                 
 def formula_menu():
-        menuhead
+        menuhead()
         print('/nCURRENT FORMULAS ARE:\n')
         for item in sorted(saved_objects.keys()):
                 if type(saved_objects[item])==type(Formula()):
                         print('\t\t{0}'.format(item))
-        menu_input=input("Type 'n' to create a new formula,'a' to adjust an existing\n\tor 'r' to return to main menu\n")
+        menu_input=input("Type 'n' to create a new formula,'a' to adjust an existing\n\tor 'r' to return to main menu\n\n\t'd' to delete a formula")
         if menu_input=='n':
                 new_formula_menu()
                 formula_menu()
         if menu_input=='a':
                 formula_adjust_menu()
                 formula_menu()
+        if menu_input=='d':
+                choice=input('Formula to delete?')
+                sure=input("You have chosen to delete {0}. Are you sure?y/n".format(choice))
+                if sure=='y':
+                        try:
+                                saved_objects.pop(choice)
+                                save()
+                        except:
+                                print("Formula entered in non-existent")

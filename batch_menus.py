@@ -1,17 +1,16 @@
-from menus import*
 from Classes import*
 def view_batch_menu():
-        print(menuhead)
+        menuhead()
         batch_choice=input('Which batch to print?')
         batch=saved_objects[batch_choice]
         batch.print_batch()
         
 
 def batch_adjust_menu():
-        print(menuhead)
+        menuhead()
         for item in sorted(saved_objects.keys()):
                 if type(saved_objects[item])==type(Batch()):
-                        print('\t\t{0}'.format(int(item)))
+                        print('\t\t{0}'.format(item))
         batch_choice=input('\nBatch to edit?\n')
         while saved_objects[batch_choice]:
                 batch=saved_objects[batch_choice]
@@ -31,7 +30,7 @@ def batch_adjust_menu():
                             return
                         saved_objects[batch_choice]=Batch(batch_choice,formula,loaves,size)
                         save()
-                
+                #need to make seperate function to delete a batch and move to main batch
                 if choice=='d':
                         batch=input('Which load to delete?')
                         saved_objects.pop(batch)
@@ -40,7 +39,7 @@ def batch_adjust_menu():
         batch_menu()
 
 def new_batch_menu():
-        print(menuhead)
+        menuhead()
         print('Batch Menu')
         while True:
                 batch_name=input('Enter Batch Name:')
@@ -58,7 +57,7 @@ def new_batch_menu():
                 save()
 
 def batch_menu():
-        print(menuhead)
+        menuhead()
         print('\nCURRENT FORMULAS ARE:\n')
         for item in sorted(saved_objects.keys()):
                 if type(saved_objects[item])==type(Formula()):

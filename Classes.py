@@ -4,7 +4,8 @@ import pickle
 
 def menuhead():
     print('--'*30+'\n')
-
+def exitmenu():
+        return
     
         
 class Formula:
@@ -16,12 +17,12 @@ class Formula:
         self.name=name
 
     def print_formula(self):
-        X=[(self.formula[item],item) for item in self.formula.keys()]
+        X=[(item,self.formula[item]) for item in self.formula.keys()]
         X=sorted(X,key=None, reverse=True)
         i=0
         print('\t\t{0}:\n'.format(self.name))
         while i<len(X):
-            print ('\t\t{0:<20} {1:>12.3f}'.format(X[i][1],X[i][0]))
+            print ('\t\t{0:<20} {1:>12.3f}'.format(X[i][0],X[i][1]))
             i+=1
         print('')
 """working on storing created formulas using pickle, difficulty is loading them
@@ -83,6 +84,7 @@ def delete(item):
         saved_objects.pop(item.name)
         pickle.dump(saved_objects,open('objects.pkl','wb',-1))
         pickle.load(open('objects.pkl','rb'))
+
 """ ::::::::::: TO DO   ::::::::::
     -need to improve the layout of the printed formulas,batches etc. Perhaps
     should print to pdf. Then easy to print hard-copy or view on screen.
